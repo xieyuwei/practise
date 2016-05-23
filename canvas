@@ -1,1 +1,122 @@
 # practise
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas</title>
+    <style type="text/css">
+
+        #canvas{
+            display: block;
+            border:1px solid black;
+            margin: 10% auto;
+        }
+    </style>
+
+</head>
+<body>
+    <canvas id="canvas" width="400" height="400">
+
+    </canvas>
+    <script>
+        window.onload = draw;
+        function draw(){
+            var canvas = document.getElementById('canvas');
+            var ctx= canvas.getContext('2d');
+            ctx.beginPath();
+            for(var i = 0;i<60;i++){
+                ctx.moveTo(200,200);
+                ctx.arc(200,200,150,6*i*Math.PI/180,6*(i+1)*Math.PI/180);
+            }
+            ctx.closePath();
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(200,200,140,0,2*Math.PI);
+            ctx.fillStyle='white';
+            ctx.fill();
+
+            ctx.beginPath();
+            for(var j=0;j<12;j++){
+                ctx.moveTo(200,200);
+                ctx.arc(200,200,150,30*j*Math.PI/180,30*(j+1)*Math.PI/180);
+            }
+            ctx.closePath();
+            ctx.lineWidth=3;
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(200,200,135,0,2*Math.PI);
+            ctx.fillStyle='white';
+            ctx.fill();
+//            时针
+            ctx.beginPath();
+            ctx.moveTo(200,200)
+            ctx.arc(200,200,75,0,0)
+            ctx.closePath();
+            ctx.lineWidth=5;
+            ctx.stroke();
+//            分针
+            ctx.beginPath();
+            ctx.moveTo(200,200)
+            ctx.arc(200,200,95,1,1)
+            ctx.closePath();
+            ctx.lineWidth=3;
+            ctx.stroke();
+//            秒针
+            ctx.beginPath();
+            ctx.moveTo(200,200)
+            ctx.arc(200,200,120,2,2)
+            ctx.closePath();
+            ctx.lineWidth=1;
+            ctx.stroke();
+
+
+
+
+//            ctx.beginPath();
+//            ctx.moveTo(100,100);
+//            ctx.lineTo(200,200);
+//            ctx.lineTo(300,100);
+//            ctx.closePath();
+//            ctx.fillStyle='blue';
+//            ctx.fill();
+//
+//            ctx.lineWidth=5;
+//            ctx.strokeStyle='black';
+//            ctx.stroke();
+//            不要在CSS中设置画布大小，单位不同
+            /*描边*/
+
+
+//            ctx.beginPath();
+//            ctx.arc(300,250,200,0,2*Math.PI);
+//            ctx.lineWidth=3;
+//            ctx.strokeStyle='red';
+//            ctx.stroke();
+//
+//            ctx.beginPath();
+//            ctx.arc(300,250,100,0,Math.PI);
+//            ctx.lineWidth=3;
+//            ctx.strokeStyle='red';
+//            ctx.stroke();
+//
+//            ctx.beginPath();
+//            ctx.arc(200,150,10,0,2*Math.PI);
+//            ctx.lineWidth=3;
+//            ctx.strokeStyle='red';
+//            ctx.stroke();
+//
+//            ctx.beginPath();
+//            ctx.arc(400,150,10,0,2*Math.PI);
+//            ctx.lineWidth=3;
+//            ctx.strokeStyle='red';
+//            ctx.stroke();
+//            画的笑脸，开始都要用ctx.beginPath(); 否则会出现错误
+
+
+        }
+
+    </script>
+</body>
+</html>

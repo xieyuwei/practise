@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas</title>
+    <style type="text/css">
+
+        #canvas{
+            display: block;
+            border:1px solid black;
+            margin: 10% auto;
+        }
+    </style>
+
+</head>
+<body>
+    <canvas id="canvas" width="400" height="600">
+
+    </canvas>
+    <script>
+        window.onload = draw;
+        function draw() {
+            var canvas = document.getElementById('canvas');
+            var ctx = canvas.getContext('2d');
+            //            通过画布设置的五种字体样式
+//实心颜色字体
+            ctx.beginPath();
+            ctx.font = '60pt simhei';
+            ctx.fillStyle='blue';
+            ctx.fillText('画布Canvas',0,100);
+//            filltext要写在最后，它的属性写在前面
+//空心字体
+            ctx.beginPath();
+            ctx.font = '60pt simhei';
+            ctx.strokeStyle='blue';
+            ctx.strokeText('画布Canvas',0,200);
+//颜色渐变字体
+            ctx.beginPath();
+            var grd=ctx.createLinearGradient(0,0,400,0);
+            grd.addColorStop(0,'red');
+            grd.addColorStop(0.5,'yellow');
+            grd.addColorStop(1,'green');
+            ctx.font = '60pt SimHei';
+            ctx.fillStyle=grd;
+            ctx.fillText('画布Canvas',0,300);
+//图片做背景字体
+            ctx.beginPath();
+            var pic = new Image();
+            pic.onload= function (){
+                var pattern =ctx.createPattern(pic,'repeat');
+                ctx.font='60pt,SimHei';
+                ctx.fillStyle=pattern;
+                ctx.fillText('画布Canvas',0,400);
+            }
+            pic.src="images/背景图.jpg";
+//5阴影字体
+            ctx.beginPath();
+            ctx.shadowColor='grey';
+            ctx.shadowBlur=20 ;
+            ctx.shadowOffsetX=15;
+            ctx.shadowOffsetY=15;
+            ctx.font='60pt,SimHei';
+            ctx.fillStyle='blue';
+            ctx.fillText('画布Canvas',0,500);
+                 }
+
+    </script>
+</body>
+</html>
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas</title>
+    <style type="text/css">
+
+        #canvas{
+            display: block;
+            border:1px solid black;
+            margin: 10% auto;
+        }
+    </style>
+
+</head>
+<body>
+    <canvas id="canvas" width="400" height="600">
+
+    </canvas>
+    <script>
+        window.onload = draw;
+        function draw() {
+            var canvas = document.getElementById('canvas');
+            var ctx = canvas.getContext('2d');
+            //画时钟
+            var date = new Date();
+            var hour = date.getHours();
+            var minute = date.getMinutes();
+            var second = date.getSeconds();
+            var hourvalue = (-90 + 30 * hour + minute / 2) * Math.PI / 180;
+            var minutevalue = (-90 + 6 * minute) * Math.PI / 180;
+            var secondvalue = (-90 + 6 * second) * Math.PI / 180;
+            for (var i = 0; i < 60; i++) {
+                ctx.moveTo(200, 200);
+                ctx.arc(200, 200, 150, 6 * i * Math.PI / 180, 6 * (i + 1) * Math.PI / 180);
+            }
+            ctx.closePath();
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(200, 200, 140, 0, 2 * Math.PI);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+
+            ctx.beginPath();
+            for (var j = 0; j < 12; j++) {
+                ctx.moveTo(200, 200);
+                ctx.arc(200, 200, 150, 30 * j * Math.PI / 180, 30 * (j + 1) * Math.PI / 180);
+            }
+            ctx.closePath();
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(200, 200, 135, 0, 2 * Math.PI);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+
+//            时针
+            ctx.beginPath();
+            ctx.moveTo(200, 200);
+            ctx.arc(200, 200, 75, hourvalue, hourvalue);
+            ctx.closePath();
+            ctx.lineWidth = 5;
+            ctx.stroke();
+//            分针
+            ctx.beginPath();
+            ctx.moveTo(200, 200);
+            ctx.arc(200, 200, 95, minutevalue, minutevalue);
+            ctx.closePath();
+            ctx.lineWidth = 3;
+            ctx.stroke();
+//            秒针
+            ctx.beginPath();
+            ctx.moveTo(200, 200);
+            ctx.arc(200, 200, 120, secondvalue, secondvalue);
+            ctx.closePath();
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+        setInterval(draw,1000);
+               
+
+    </script>
+</body>
+</html>

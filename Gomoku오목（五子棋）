@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+    canvas{
+    display: block;
+    margin: 50px auto;
+    box-shadow: -2px -2px 2px #efefef, 5px 5px 5px #b9b9b9;
+    /*canvas的宽高不要在CSS中设置*/
+}
+    </style>
+</head>
+<body>
+    <canvas id="chess" width="450px" height="450px"></canvas>
+
+
+    <script>
+    /**
+ * Created by xieyuwei on 2016/6/23.
+ */
+    var chessBox = [];
+    var me =true;
+    var over = false;
+
+//赢法数组 3维
+    var wins = [];
+//赢法的统计数组  1维
+var mywin = [];
+var computerwin = [];
+
+//建好棋盘索引  2维
+for (var i=0;i<15;i++){
+    chessBox[i] = [];
+    for (var j=0; j<15; j++){
+        chessBox[i][j]=0;
+    }
+}
+//初始化赢法数组  建好三维数组
+
+      for(var i=0;i<15;i++){
+          wins[i]=[];
+          for(var j=0;j<15;j++){
+              wins[i][j]=[];
+          }
+      }
+var count = 0;
+//列出各种情况、横竖、斜线和反斜线
+//竖线
+for(var i=0;i<15;i++){
+    for(var j=0;j<11;j++){
+        for(var k=0;k<5;k++){
+            wins[i][j+k][count] = true;
+        }
+        count++;
+    }
+}
+//横线
+for(var i=0;i<15;i++){
+    for(var j=0;j<11;j++){
+        for(var k=0;k<5;k++){
+            wins[j+k][i][count] = true;
+        }
+        count++;
+    }
+}
+//斜线
+for(var i=0;i<11;i++){
+    for(var j=0;j<11;j++){
+        for(var k=0;k<5;k++){
+            wins[i+k][j+k][count] = true;
+        }
+        count++;
+    }
+}
+//反斜线
+for(var i=4;i<15;i++){
+    for(var j=0;j<11;j++){
+        for(var k=0;k<5;k++){
+            wins[i-k][j+k][count] = true;
+        }
+        count++;
+    }
+}
+console.log(count);
+
+//统计赢法的算法结束
+
+
+//初始化赢法统计数组   我和计算机
+for (var i=0;i<count;i++){
+    mywin[i]=0;
+    computerwin[i]=0;
+
+}
+
+    var chess = document.getElementById('chess');
+    var ctx= chess.getContext('2d');
+
+var drawChessBoard= function(){
+    for(var i=0;i<15;i++){
+        ctx.strokeStyle='#bfbfbf';
+        ctx.moveTo(15+i*30,15);
+        ctx.lineTo(15+i*30,435);
+        ctx.stroke();
+        ctx.strokeStyle='#bfbfbf';
+        ctx.moveTo(15,15+i*30);
+        ctx.lineTo(435,15+i*30);
+        ctx.stroke();
+    }
+}
+
+
+     var pic=new Image();
+     pic.src="image/love.jpg";
+
+
+     pic.onload = function() {
+         ctx.drawImage(pic,0,0,450,450);
+         drawChessBoard();
+}
+
+     var oneStep = function (i,j,me) {
+         ctx.beginPath();
+         ctx.arc(15+i*30,15+j*30,13,0,2*Math.PI);
+         //圆心坐标（200,200）半径100，然后起始弧度
+         ctx.closePath();
+         var gradient = ctx.createRadialGradient(15+i*30+2,15+j*30-2,13,15+i*30+2,15+j*30-2,0);
+         //函数有6个参数对应2个圆，Radial径向渐变 Linear线性渐变
+         if(me){
+         gradient.addColorStop(0,"#0a0a0a");
+         gradient.addColorStop(1,"#636766");
+
+         }else {
+             gradient.addColorStop(0,"#d1d1d1");
+             gradient.addColorStop(1,"#f9f9f9");
+
+         }
+         ctx.fillStyle=gradient;
+         //设置好渐变，fillstyle改成渐变对象。
+         ctx.fill();
+     }
+
+chess.onclick= function(e){
+    if(over){
+        return;
+    }
+    if(!me){
+        return;
+    }
+    var x = e.offsetX;
+    var y = e.offsetY;
+    var i = Math.floor(x/30);
+    var j = Math.floor(y/30);
+    if(chessBox[i][j]==0){
+            oneStep(i,j,me);
+            chessBox[i][j]=1;
+
+        for(var k=0;k<count;k++){
+            if(wins[i][j][k]){
+            mywin[k]++;
+            computerwin=6;
+            if(mywin[k]==5){
+                window.alert('Congratulations! 네가 이겼다!');
+                over = true;
+            }
+            }
+        }
+        if(!over){
+            me = !me;
+            computerAI();
+        }
+}
+}
+
+var computerAI = function(){
+     var myScore=[];
+     var computerScore = [];
+    var max = 0 ;
+    var u= 0, v=0;
+    for(var i =0;i<15;i++){
+        myScore[i]=[];
+        computerScore[i]=[];
+        for(var j=0;j<15;j++){
+            myScore[i][j]=0;
+            computerScore[i][j]=0;
+        }
+    }
+    for(var i =0 ; i<15;i++){
+        for (var j=0;j<15;j++){
+            if(chessBox[i][j]==0) {
+                for(var k=0 ; k<count;k++){
+                    if(wins[i][j][k]){
+                      if(mywin[k]==1){
+                          myScore[i][j]+=200;
+                      }else if(mywin[k]==2){
+                          myScore[i][j]+=400;
+                      }else if(mywin[k]==3){
+                          myScore[i][j]+=2000;
+                      }else if(mywin[k]==4){
+                          myScore[i][j]+=10000;
+                      }
+                      if(computerwin[k]==1){
+                          computerScore[i][j]+=220;
+                      }else if(computerwin[k]==2){
+                          computerScore[i][j]+=420;
+                      }else if(computerwin[k]==3){
+                          computerScore[i][j]+=2100;
+                      }else if(computerwin[k]==4){
+                          computerScore[i][j]+=20000;
+                      }
+                    }
+                }
+                if(myScore[i][j]>max){
+                    max = myScore[i][j];
+                    u=i;
+                    v=j;
+                }else if(myScore[i][j]==max){
+                    if(computerScore[i][j]>computerScore[u][v]){
+                        u=i;
+                        v=j;
+                    }
+                }
+                if(computerScore[i][j]>max){
+                    max = computerScore[i][j];
+                    u=i;
+                    v=j;
+                }else if(computerScore[i][j]==max){
+                    if(myScore[i][j]>myScore[u][v]){
+                        u=i;
+                        v=j;
+                    }
+
+                }
+            }
+
+        }
+    }
+    oneStep(u,v,false);
+    chessBox[u][v]=2;
+    for(var k=0;k<count;k++){
+        if(wins[u][v][k]){
+            computerwin[k]++;
+            mywin[k]=6;
+            if(computerwin[k]==5){
+                window.alert('Computer win! 넌 실패했다!');
+                over = true;
+            }
+        }
+    }if(!over){
+        me = !me;
+    }
+}
+    </script>
+</body>
+</html>
